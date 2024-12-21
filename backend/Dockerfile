@@ -1,14 +1,8 @@
-FROM python:3.10 AS build
-WORKDIR /code
+FROM python:3.10
+WORKDIR /app
 COPY requirements.txt .
-RUN python -m venv /venv
-RUN /venv/bin/pip install -r requirements.txt
+RUN pip install -r requirements.txt --no-cache-dir
 COPY . .
-
-FROM python:3.10-alpine
 ENV PYTHONUNBUFFERED=1
-COPY --from=build /code /code
-ENV PATH="/venv/bin:$PATH"
-EXPOSE 8000
-# CMD ["/bin/sh", "-c", ". venv/bin/activate && python code/manage.py runserver 0.0.0.0:8000"]
-CMD ["python","code/manage.py","runserver","0.0.0.0:8000"]
+RUN chmod +x *.sh
+CMD ["/bin/sh", "-c", "/app/entrypoint.sh"]
