@@ -38,9 +38,9 @@ jobs:
 
     - name: Deploy to server
       run: |
-        ssh -i ${{ secrets.SSH_KEY }} ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+        ssh -i ${{ secrets.SSH_KEY }} ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF
           cd ~/ktgrm-test
           docker-compose pull
           docker-compose down
           docker-compose up -d
-EOF
+EOF'
