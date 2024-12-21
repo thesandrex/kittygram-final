@@ -38,11 +38,7 @@ jobs:
       run: |
         echo "${{ secrets.SSH_KEY }}" > ./key.pem
         chmod 600 ./key.pem
-        ssh -i "./key.pem" -o StrictHostKeyChecking=no -t ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-          cd ~/ktgrm-test
-          docker-compose pull
-          docker-compose down
-          docker-compose up -d EOF
+        ssh -i "./key.pem" -o StrictHostKeyChecking=no -t ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "cd ~/ktgrm-test && docker-compose pull && docker-compose down && docker-compose up -d"
 
     - name: Run tests
       run: pytest
