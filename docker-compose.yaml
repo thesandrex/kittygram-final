@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
+  backend:
+    image: crocksgift/kittygram_backend:latest
+    build:
+      context: ./backend
+    volumes:
+      - static:/static
+      - media:/media
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    depends_on:
+      - postgres
+
+  frontend:
+    image: crocksgift/kittygram_frontend:latest
+    build:
+      context: ./frontend
+
+  gateway:
+    image: crocksgift/kittygram_gateway:latest
+    build:
+      context: ./nginx
+    ports:
+      - "8000:80"
+    volumes:
+      - static:/static
+      - media:/media
+    depends_on:
+      - backend
+      - frontend
+
+volumes:
+  static:
+  media:
+  pg_data:
