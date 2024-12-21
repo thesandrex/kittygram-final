@@ -38,7 +38,9 @@ def _make_safe_request(link: str, stream: bool = False) -> requests.Response:
     try:
         response = requests.get(link, stream=stream, timeout=15)
     except requests.exceptions.SSLError:
-        raise AssertionError(f"Убедитесь, что настроили шифрование для `{link}`.")
+        raise AssertionError(
+            f"Убедитесь, что настроили шифрование для `{link}`."
+        )
     except requests.exceptions.ConnectionError:
         raise AssertionError(f"Убедитесь, что URL `{link}` доступен.")
     expected_status = HTTPStatus.OK
@@ -60,11 +62,14 @@ def test_link_connection(
     deploy_info_file_content: dict[str, str],
     link_key: str,
 ) -> None:
-    link = _get_validated_link(deploy_file_info, deploy_info_file_content, link_key)
+    link = _get_validated_link(
+        deploy_file_info, deploy_info_file_content, link_key
+    )
     response = _make_safe_request(link)
     cats_project_name = "Kittygram"
     assert_msg_template = (
-        f"Убедитесь, что по ссылке `{link}` доступен проект " "`{project_name}`."
+        f"Убедитесь, что по ссылке `{link}` доступен проект "
+        "`{project_name}`."
     )
     if link_key == "kittygram_domain":
         assert cats_project_name in response.text, assert_msg_template.format(
@@ -112,7 +117,9 @@ def test_kittygram_api_available(
     try:
         response = requests.post(signup_link, data=form_data, timeout=15)
     except requests.exceptions.SSLError:
-        raise AssertionError(f"Убедитесь, что настроили шифрование для `{link}`.")
+        raise AssertionError(
+            f"Убедитесь, что настроили шифрование для `{link}`."
+        )
     except requests.ConnectionError:
         raise AssertionError(assert_msg)
     expected_status = HTTPStatus.BAD_REQUEST

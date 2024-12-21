@@ -70,23 +70,27 @@ class CatSerializer(serializers.ModelSerializer):
             achievements = validated_data.pop("achievements")
             cat = Cat.objects.create(**validated_data)
             for achievement in achievements:
-                current_achievement, status = Achievement.objects.get_or_create(
-                    **achievement
+                current_achievement, status = (
+                    Achievement.objects.get_or_create(**achievement)
                 )
-                AchievementCat.objects.create(achievement=current_achievement, cat=cat)
+                AchievementCat.objects.create(
+                    achievement=current_achievement, cat=cat
+                )
             return cat
 
     def update(self, instance, validated_data):
         instance.name = validated_data.get("name", instance.name)
         instance.color = validated_data.get("color", instance.color)
-        instance.birth_year = validated_data.get("birth_year", instance.birth_year)
+        instance.birth_year = validated_data.get(
+            "birth_year", instance.birth_year
+        )
         instance.image = validated_data.get("image", instance.image)
         if "achievements" in validated_data:
             achievements_data = validated_data.pop("achievements")
             lst = []
             for achievement in achievements_data:
-                current_achievement, status = Achievement.objects.get_or_create(
-                    **achievement
+                current_achievement, status = (
+                    Achievement.objects.get_or_create(**achievement)
                 )
                 lst.append(current_achievement)
             instance.achievements.set(lst)

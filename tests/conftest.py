@@ -74,7 +74,9 @@ def deploy_file_info() -> tuple[Path, str]:
 
 
 @pytest.fixture(scope="session")
-def deploy_info_file_content(deploy_file_info: tuple[Path, str]) -> dict[str, str]:
+def deploy_info_file_content(
+    deploy_file_info: tuple[Path, str]
+) -> dict[str, str]:
     path, relative_path = deploy_file_info
     with open(path, "r", encoding="utf-8", errors="ignore") as f:
         file_content = {}
