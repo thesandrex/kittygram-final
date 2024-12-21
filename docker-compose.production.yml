@@ -17,7 +17,7 @@ services:
     container_name: backend
     volumes:
       - backend_media:/app/media
-      - backend_static:/app/static
+      - backend_static:/app/collected_static
     env_file:
       - .env
     ports:
