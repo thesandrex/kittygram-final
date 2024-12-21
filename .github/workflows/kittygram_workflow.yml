@@ -71,7 +71,7 @@ jobs:
           cd ~/ktgrm-test
           sudo docker-compose -f docker-compose.production.yml pull
           sudo docker-compose -f docker-compose.production.yml down
-          sudo docker-compose -f docker-compose.production.yml up -d
+          sudo docker-compose -f docker-compose.production.yml up --build -d
           sudo docker-compose -f docker-compose.production.yml exec -T backend python manage.py collectstatic --noinput
           sudo docker-compose -f docker-compose.production.yml exec -T backend python manage.py migrate --noinput
           EOF
@@ -107,4 +107,4 @@ jobs:
         with:
           to: ${{ secrets.TG_CHAT_ID }}
           token: ${{ secrets.TG_TOKEN }}
-          message: "Kittygram version successfully passed auto-tests and has been deployed!"
+          message: "Kittygram version successfully passed auto-tests and has been deployed! Commit: https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
