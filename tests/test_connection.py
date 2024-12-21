@@ -96,6 +96,7 @@ def test_kittygram_static_is_available(
 
     assert_msg = "Убедитесь, что статические файлы для `Kittygram` доступны."
     js_link_response = requests.get(f"{link}/{js_link}")
+    print(f"STATIC LINK - {link}/{js_link}")
     expected_status = HTTPStatus.OK
     assert js_link_response.status_code == expected_status, assert_msg
 
