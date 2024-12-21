@@ -34,9 +34,6 @@ jobs:
         docker build -t ${{ secrets.DOCKER_USERNAME }}/kittygram_backend ./backend
         docker push ${{ secrets.DOCKER_USERNAME }}/kittygram_backend
 
-    - name: Run tests
-      run: pytest
-
     - name: Deploy to server
       run: |
         ssh -i ${{ secrets.SSH_KEY }} ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF
@@ -44,3 +41,7 @@ jobs:
           docker-compose pull
           docker-compose down
           docker-compose up -d EOF'
+
+    - name: Run tests
+      run: pytest
+
