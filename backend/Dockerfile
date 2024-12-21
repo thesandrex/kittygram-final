@@ -8,5 +8,5 @@ FROM python:3.10-alpine
 ENV PYTHONUNBUFFERED=1
 COPY --from=build /code /code
 EXPOSE 8000
-CMD ["ls","-al"]
+CMD ["ls","code/","-al"]
 # CMD ["python","manage.py","runserver","0.0.0.0:8000"]
