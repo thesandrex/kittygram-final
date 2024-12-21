@@ -10,6 +10,8 @@ services:
       - "5432:5432"
     volumes:
       - pg_data:/var/lib/postgresql/data
+    networks:
+      - common_network
     restart: always
 
   backend:
@@ -24,6 +26,8 @@ services:
       - "8000:8000"
     depends_on:
       - postgres
+    networks:
+      - common_network
     restart: always
 
   frontend:
@@ -35,6 +39,8 @@ services:
       - "3000:8000"
     depends_on:
       - backend
+    networks:
+      - common_network
     restart: always
 
   gateway:
@@ -49,6 +55,8 @@ services:
     depends_on:
       - frontend
       - backend
+    networks:
+      - common_network
     restart: always
 
 volumes:
@@ -56,3 +64,8 @@ volumes:
   backend_static:
   backend_media:
   pg_data:
+
+networks:
+  common_network:
+    driver: bridge
+
