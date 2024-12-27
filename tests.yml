@@ -1,5 +1,3 @@
 repo_owner: thesandrex
 kittygram_domain: http://3.238.29.205
-dockerhub_username: crocksgift 
-
-# не совсем понял что значит не хватает статики в админке, опишите пожалуйста что нужно сделать, потому что не припомню чтобы админка как-то отдельно выделялась от бэкенда
+dockerhub_username: crocksgift
