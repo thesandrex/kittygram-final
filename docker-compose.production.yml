@@ -6,8 +6,6 @@ services:
     container_name: postgres
     env_file:
       - .env
-    ports:
-      - "5432:5432"
     volumes:
       - pg_data:/var/lib/postgresql/data
     networks:
@@ -18,12 +16,10 @@ services:
     image: crocksgift/kittygram_backend:latest
     container_name: backend
     volumes:
-      - backend_media:/app/media
-      - backend_static:/app/collected_static
+      - media:/app/media
+      - static:/app/collected_static
     env_file:
       - .env
-    ports:
-      - "8000:8000"
     depends_on:
       - postgres
     networks:
@@ -34,9 +30,7 @@ services:
     image: crocksgift/kittygram_frontend:latest
     container_name: frontend
     volumes:
-      - frontend_static:/app/build
-    ports:
-      - "3000:8000"
+      - static:/app/build
     depends_on:
       - backend
     networks:
@@ -49,20 +43,15 @@ services:
     ports:
       - "80:80"
     volumes:
-      - frontend_static:/static/frontend
-      - backend_static:/static/backend
-      - backend_media:/media
-    depends_on:
-      - frontend
-      - backend
+      - static:/static
+      - media:/media
     networks:
       - common_network
     restart: always
 
 volumes:
-  frontend_static:
-  backend_static:
-  backend_media:
+  static:
+  media:
   pg_data:
 
 networks:
