@@ -25,20 +25,36 @@ jobs:
           terraform_wrapper: false
 
       - name: Terraform Init
+        env:
+          YC_CLOUD_ID: ${{ secrets.YC_CLOUD_ID }}
+          YC_FOLDER_ID: ${{ secrets.YC_FOLDER_ID }}
+          YC_TOKEN: ${{ secrets.YC_TOKEN }}
         run: terraform init
         working-directory: ./infra
 
       - name: Terraform Plan
         if: ${{ github.event.inputs.action == 'plan' }}
-        run: terraform plan
+        env:
+          YC_CLOUD_ID: ${{ secrets.YC_CLOUD_ID }}
+          YC_FOLDER_ID: ${{ secrets.YC_FOLDER_ID }}
+          YC_TOKEN: ${{ secrets.YC_TOKEN }}
+        run: terraform plan -var="cloud_id=$YC_CLOUD_ID" -var="folder_id=$YC_FOLDER_ID" -var="token=$YC_TOKEN"
         working-directory: ./infra
 
       - name: Terraform Apply
         if: ${{ github.event.inputs.action == 'apply' }}
-        run: terraform apply -auto-approve
+        env:
+          YC_CLOUD_ID: ${{ secrets.YC_CLOUD_ID }}
+          YC_FOLDER_ID: ${{ secrets.YC_FOLDER_ID }}
+          YC_TOKEN: ${{ secrets.YC_TOKEN }}
+        run: terraform apply -auto-approve -var="cloud_id=$YC_CLOUD_ID" -var="folder_id=$YC_FOLDER_ID" -var="token=$YC_TOKEN"
         working-directory: ./infra
 
       - name: Terraform Destroy
         if: ${{ github.event.inputs.action == 'destroy' }}
-        run: terraform destroy -auto-approve
+        env:
+          YC_CLOUD_ID: ${{ secrets.YC_CLOUD_ID }}
+          YC_FOLDER_ID: ${{ secrets.YC_FOLDER_ID }}
+          YC_TOKEN: ${{ secrets.YC_TOKEN }}
+        run: terraform destroy -auto-approve -var="cloud_id=$YC_CLOUD_ID" -var="folder_id=$YC_FOLDER_ID" -var="token=$YC_TOKEN"
         working-directory: ./infra
