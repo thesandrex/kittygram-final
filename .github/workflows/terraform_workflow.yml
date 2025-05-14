@@ -15,6 +15,8 @@ on:
 jobs:
   terraform:
     runs-on: ubuntu-latest
+    outputs:
+      external_ip: ${{ steps.get_ip.outputs.ip }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -38,7 +40,7 @@ jobs:
           YC_CLOUD_ID: ${{ secrets.YC_CLOUD_ID }}
           YC_FOLDER_ID: ${{ secrets.YC_FOLDER_ID }}
           YC_TOKEN: ${{ secrets.YC_TOKEN }}
-        run: terraform plan -var="cloud_id=$YC_CLOUD_ID" -var="folder_id=$YC_FOLDER_ID" -var="token=$YC_TOKEN"
+        run: terraform plan -var="cloud_id=$YC_CLOUD_ID" -var="folder_id=$YC_FOLDER_ID" -var="token=$YC_TOKEN" -var="vm_user=ubuntu" -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}
         working-directory: ./infra
 
       - name: Terraform Apply
@@ -47,7 +49,7 @@ jobs:
           YC_CLOUD_ID: ${{ secrets.YC_CLOUD_ID }}
           YC_FOLDER_ID: ${{ secrets.YC_FOLDER_ID }}
           YC_TOKEN: ${{ secrets.YC_TOKEN }}
-        run: terraform apply -auto-approve -var="cloud_id=$YC_CLOUD_ID" -var="folder_id=$YC_FOLDER_ID" -var="token=$YC_TOKEN"
+        run: terraform apply -auto-approve -var="cloud_id=$YC_CLOUD_ID" -var="folder_id=$YC_FOLDER_ID" -var="token=$YC_TOKEN" -var="vm_user=ubuntu" -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}
         working-directory: ./infra
 
       - name: Terraform Destroy
@@ -56,7 +58,12 @@ jobs:
           YC_CLOUD_ID: ${{ secrets.YC_CLOUD_ID }}
           YC_FOLDER_ID: ${{ secrets.YC_FOLDER_ID }}
           YC_TOKEN: ${{ secrets.YC_TOKEN }}
-        run: terraform destroy -auto-approve -var="cloud_id=$YC_CLOUD_ID" -var="folder_id=$YC_FOLDER_ID" -var="token=$YC_TOKEN"
+        run: terraform destroy -auto-approve -var="cloud_id=$YC_CLOUD_ID" -var="folder_id=$YC_FOLDER_ID" -var="token=$YC_TOKEN" -var="vm_user=ubuntu" -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}
+        working-directory: ./infra
+
+      - name: Get VM IP
+        id: get_ip
+        run: echo "ip=$(terraform output -raw external_ip)" >> $GITHUB_ENV
         working-directory: ./infra
 
   deploy:
@@ -68,11 +75,11 @@ jobs:
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.5.3
         with:
-          ssh-private-key: ${{ secrets.SSH_KEY }}
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Deploy application
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no ubuntu@$ip << 'EOF'
           git clone https://github.com/thesandrex/kittygram-final.git ~/kittygram
           cd ~/kittygram
           sudo docker-compose -f docker-compose.production.yml pull
