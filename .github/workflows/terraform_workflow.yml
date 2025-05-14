@@ -30,7 +30,7 @@ jobs:
           YC_FOLDER_ID: ${{ secrets.YC_FOLDER_ID }}
           YC_TOKEN: ${{ secrets.YC_TOKEN }}
         run: terraform init
-        working-directory: ./infra
+        working-directory: ./terraform
 
       - name: Terraform Plan
         if: ${{ github.event.inputs.action == 'plan' }}
@@ -39,7 +39,7 @@ jobs:
           YC_FOLDER_ID: ${{ secrets.YC_FOLDER_ID }}
           YC_TOKEN: ${{ secrets.YC_TOKEN }}
         run: terraform plan -var="cloud_id=$YC_CLOUD_ID" -var="folder_id=$YC_FOLDER_ID" -var="token=$YC_TOKEN" -var="vm_user=ubuntu" -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}
-        working-directory: ./infra
+        working-directory: ./terraform
 
       - name: Terraform Apply
         if: ${{ github.event.inputs.action == 'apply' }}
@@ -48,7 +48,7 @@ jobs:
           YC_FOLDER_ID: ${{ secrets.YC_FOLDER_ID }}
           YC_TOKEN: ${{ secrets.YC_TOKEN }}
         run: terraform apply -auto-approve -var="cloud_id=$YC_CLOUD_ID" -var="folder_id=$YC_FOLDER_ID" -var="token=$YC_TOKEN" -var="vm_user=ubuntu" -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}
-        working-directory: ./infra
+        working-directory: ./terraform
 
       - name: Terraform Destroy
         if: ${{ github.event.inputs.action == 'destroy' }}
@@ -57,13 +57,13 @@ jobs:
           YC_FOLDER_ID: ${{ secrets.YC_FOLDER_ID }}
           YC_TOKEN: ${{ secrets.YC_TOKEN }}
         run: terraform destroy -auto-approve -var="cloud_id=$YC_CLOUD_ID" -var="folder_id=$YC_FOLDER_ID" -var="token=$YC_TOKEN" -var="vm_user=ubuntu" -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}
-        working-directory: ./infra
+        working-directory: ./terraform
 
       - name: Get VM IP
         if: ${{ github.event.inputs.action == 'apply' }}
         id: get_ip
         run: echo "ip=$(terraform output -raw external_ip)" >> $GITHUB_ENV
-        working-directory: ./infra
+        working-directory: ./terraform
 
   deploy:
     name: Deploy to remote server
