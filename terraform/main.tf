@@ -25,19 +25,25 @@ resource "yandex_vpc_subnet" "kittygram_subnet" {
 }
 
 resource "yandex_vpc_security_group" "kittygram_sg" {
-  name        = "kittygram-sg"
-  network_id  = yandex_vpc_network.kittygram_network.id
+  name       = "kittygram-sg"
+  network_id = yandex_vpc_network.kittygram_network.id
 
   ingress {
     protocol = "TCP"
-    ports    = [22, 9000]
+    port     = 22
+  }
+
+  ingress {
+    protocol = "TCP"
+    port     = 9000
   }
 
   egress {
     protocol = "all"
-    ports    = [0-65535]
+    port     = 0
   }
 }
+
 
 resource "yandex_compute_instance" "kittygram_vm" {
   name        = "kittygram-vm"
