@@ -5,6 +5,16 @@ terraform {
       version = "~> 0.90"
     }
   }
+  backend "s3" {
+    endpoint   = "storage.yandexcloud.net"
+    bucket     = "crocksgift-kittygram-terraform-state"
+    key        = "terraform/state.tfstate"
+    region     = "ru-central1"
+    access_key = var.access_key
+    secret_key = var.secret_key
+    skip_region_validation      = true
+    skip_credentials_validation = true
+  }
 }
 
 provider "yandex" {
@@ -70,6 +80,6 @@ resource "yandex_compute_instance" "kittygram_vm" {
 }
 
 resource "yandex_storage_bucket" "tf_state" {
-  bucket = "kittygram-terraform-state"
+  bucket = "crocksgift-kittygram-terraform-state"
   acl    = "private"
 }
