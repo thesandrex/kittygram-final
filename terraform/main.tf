@@ -6,10 +6,11 @@ terraform {
     }
   }
   backend "s3" {
-    endpoint   = "storage.yandexcloud.net"
+    endpoints {
+      s3 = "https://storage.yandexcloud.net"
+    }
     bucket     = "crocksgift-kittygram-terraform-state"
     key        = "terraform/state.tfstate"
-    region     = "ru-central1"
     skip_region_validation      = true
     skip_credentials_validation = true
   }
