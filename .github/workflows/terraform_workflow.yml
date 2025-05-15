@@ -12,6 +12,12 @@ on:
           - apply
           - destroy
 
+env:
+  YC_CLOUD_ID: ${{ secrets.YC_CLOUD_ID }}
+  YC_FOLDER_ID: ${{ secrets.YC_FOLDER_ID }}
+  YC_TOKEN: ${{ secrets.YC_TOKEN }}
+  AWS_DEFAULT_REGION: "ru-central1"
+
 jobs:
   terraform:
     runs-on: ubuntu-latest
@@ -25,38 +31,21 @@ jobs:
           terraform_wrapper: false
 
       - name: Terraform Init
-        env:
-          YC_CLOUD_ID: ${{ secrets.YC_CLOUD_ID }}
-          YC_FOLDER_ID: ${{ secrets.YC_FOLDER_ID }}
-          YC_TOKEN: ${{ secrets.YC_TOKEN }}
-          AWS_DEFAULT_REGION: "ru-central1"
         run: terraform init -backend-config="access_key=${{ secrets.ACCESS_KEY }}" -backend-config="secret_key=${{ secrets.SECRET_KEY }}"
         working-directory: ./terraform
 
       - name: Terraform Plan
         if: ${{ github.event.inputs.action == 'plan' }}
-        env:
-          YC_CLOUD_ID: ${{ secrets.YC_CLOUD_ID }}
-          YC_FOLDER_ID: ${{ secrets.YC_FOLDER_ID }}
-          YC_TOKEN: ${{ secrets.YC_TOKEN }}
         run: terraform plan -var="cloud_id=$YC_CLOUD_ID" -var="folder_id=$YC_FOLDER_ID" -var="token=$YC_TOKEN" -var="vm_user=ubuntu" -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}"
         working-directory: ./terraform
 
       - name: Terraform Apply
         if: ${{ github.event.inputs.action == 'apply' }}
-        env:
-          YC_CLOUD_ID: ${{ secrets.YC_CLOUD_ID }}
-          YC_FOLDER_ID: ${{ secrets.YC_FOLDER_ID }}
-          YC_TOKEN: ${{ secrets.YC_TOKEN }}
         run: terraform apply -auto-approve -var="cloud_id=$YC_CLOUD_ID" -var="folder_id=$YC_FOLDER_ID" -var="token=$YC_TOKEN" -var="vm_user=ubuntu" -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}"
         working-directory: ./terraform
 
       - name: Terraform Destroy
         if: ${{ github.event.inputs.action == 'destroy' }}
-        env:
-          YC_CLOUD_ID: ${{ secrets.YC_CLOUD_ID }}
-          YC_FOLDER_ID: ${{ secrets.YC_FOLDER_ID }}
-          YC_TOKEN: ${{ secrets.YC_TOKEN }}
         run: terraform destroy -auto-approve -var="cloud_id=$YC_CLOUD_ID" -var="folder_id=$YC_FOLDER_ID" -var="token=$YC_TOKEN" -var="vm_user=ubuntu" -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}" -var="access_key=${{ secrets.ACCESS_KEY }}" -var="secret_key=${{ secrets.SECRET_KEY }}"
         working-directory: ./terraform
 
