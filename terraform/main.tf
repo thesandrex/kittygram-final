@@ -73,7 +73,7 @@ resource "yandex_compute_instance" "kittygram_vm" {
   }
   boot_disk {
     initialize_params {
-      image_id = "fd8m0t5d0nhqetmd0plh"
+      image_id = data.yandex_compute_image.container-optimized-image.id
     }
   }
   network_interface {
