@@ -34,7 +34,7 @@ jobs:
         run: |
           curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
           mkdir ~/.yc
-          echo "${{ secrets.YC_ACCOUNT_KEY }}" > ~/.yc/key.json
+          echo "${{ secrets.YC_ACCOUNT_KEY }}" | base64 -d > ~/.yc/key.json
 
       - name: Terraform Init
         run: terraform init -backend-config="access_key=${{ secrets.ACCESS_KEY }}" -backend-config="secret_key=${{ secrets.SECRET_KEY }}"
