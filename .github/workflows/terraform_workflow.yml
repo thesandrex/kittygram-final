@@ -70,7 +70,7 @@ jobs:
         run: |
           echo "Waiting for VM..."
           IP=$(terraform output -raw external_ip)
-          until curl -sf https://$IP:22/healthcheck; do
+          until curl -sf http://$IP/healthcheck; do
             sleep 10
           done
 
