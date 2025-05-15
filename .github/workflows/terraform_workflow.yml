@@ -65,15 +65,6 @@ jobs:
           name: vm_ip
           path: ./terraform/vm_ip.txt
 
-      - name: Wait until VM is ready
-        if: ${{ github.event.inputs.action == 'apply' }}
-        run: |
-          echo "Waiting for VM..."
-          IP=$(terraform output -raw external_ip)
-          until curl -sf http://$IP/healthcheck; do
-            sleep 10
-          done
-
       - name: Terraform Destroy
         if: ${{ github.event.inputs.action == 'destroy' }}
         run: terraform destroy -auto-approve -var="cloud_id=$YC_CLOUD_ID" -var="folder_id=$YC_FOLDER_ID" -var="vm_user=ubuntu" -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}"
@@ -101,6 +92,10 @@ jobs:
 
       - name: Deploy application
         run: |
+          while ! ssh -o StrictHostKeyChecking=no ubuntu@$VM_IP "echo 'Server is ready'"; do
+            echo "Waiting for SSH to become available..."
+            sleep 5
+          done
           ssh -o StrictHostKeyChecking=no ubuntu@$VM_IP << 'EOF'
           git clone https://github.com/thesandrex/kittygram-final.git ~/kittygram
           cd ~/kittygram
