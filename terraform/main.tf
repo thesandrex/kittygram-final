@@ -22,7 +22,7 @@ terraform {
 provider "yandex" {
   cloud_id  = var.cloud_id
   folder_id = var.folder_id
-  service_account_key_file = "key.json"
+  service_account_key_file = "~/.yc/key.json"
 }
 
 resource "yandex_vpc_network" "kittygram_network" {
