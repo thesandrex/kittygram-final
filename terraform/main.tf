@@ -45,7 +45,6 @@ resource "yandex_vpc_security_group" "kittygram_sg" {
     port            = 22
     description     = "SSH Access"
     v4_cidr_blocks  = ["0.0.0.0/0"]
-    target_tags     = ["kittygram"]
   }
 
   ingress {
@@ -53,7 +52,6 @@ resource "yandex_vpc_security_group" "kittygram_sg" {
     port            = 9000
     description     = "Kittygram App Access"
     v4_cidr_blocks  = ["0.0.0.0/0"]
-    target_tags     = ["kittygram"]
   }
 
   egress {
@@ -61,7 +59,6 @@ resource "yandex_vpc_security_group" "kittygram_sg" {
     port           = 0
     description    = "Allow all outbound traffic"
     v4_cidr_blocks = ["0.0.0.0/0"]
-    target_tags    = ["kittygram"]
   }
 }
 
