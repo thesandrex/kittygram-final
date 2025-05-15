@@ -73,7 +73,9 @@ resource "yandex_compute_instance" "kittygram_vm" {
   }
   boot_disk {
     initialize_params {
-      image_id = fv47gqgndsb7if4cfnee
+      type     = "network-hdd"
+      image_id = "fd88o3huv4mm2jndnrl1"
+      size     = 20
     }
   }
   network_interface {
