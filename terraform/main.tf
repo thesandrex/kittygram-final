@@ -80,8 +80,3 @@ resource "yandex_compute_instance" "kittygram_vm" {
     ssh-keys  = "${var.vm_user}:${var.ssh_public_key}"
   }
 }
-
-resource "yandex_storage_bucket" "tf_state" {
-  bucket = "crocksgift-kittygram-terraform-state"
-  acl    = "private"
-}
