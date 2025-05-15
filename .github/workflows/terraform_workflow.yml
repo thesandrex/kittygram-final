@@ -65,6 +65,15 @@ jobs:
           name: vm_ip
           path: ./terraform/vm_ip.txt
 
+      - name: Wait until VM is ready
+        if: ${{ github.event.inputs.action == 'apply' }}
+        run: |
+          echo "Waiting for VM..."
+          IP=$(terraform output -raw external_ip)
+          until curl -sf https://$IP:22/healthcheck; do
+            sleep 10
+          done
+
       - name: Terraform Destroy
         if: ${{ github.event.inputs.action == 'destroy' }}
         run: terraform destroy -auto-approve -var="cloud_id=$YC_CLOUD_ID" -var="folder_id=$YC_FOLDER_ID" -var="vm_user=ubuntu" -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}"
