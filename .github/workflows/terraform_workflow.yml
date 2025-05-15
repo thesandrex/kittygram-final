@@ -35,6 +35,7 @@ jobs:
           curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
           source "/home/runner/.bashrc"
           echo 'source /home/runner/yandex-cloud/completion.zsh.inc' >>  ~/.zshrc 
+          mkdir ~/.yc
           echo "${{ secrets.YC_ACCOUNT_KEY }}" | base64 -d > ~/.yc/key.json
 
       - name: Terraform Init
