@@ -29,17 +29,13 @@ resource "yandex_vpc_network" "kittygram_network" {
   name = "kittygram-network"
 }
 
-resource "yandex_vpc_gateway" "internet_gateway" {
-  name = "internet-gateway"
-}
-
 resource "yandex_vpc_route_table" "internet_route_table" {
-  network_id = yandex_vpc_network.kittygram_network.id
   name       = "internet-route-table"
+  network_id = yandex_vpc_network.kittygram_network.id
 
   static_route {
     destination_prefix = "0.0.0.0/0"
-    next_hop_gateway_id = yandex_vpc_gateway.internet_gateway.default_gateway_id
+    next_hop_internet = true
   }
 }
 
