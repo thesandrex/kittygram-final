@@ -67,7 +67,7 @@ jobs:
 
       - name: Deploy application
         run: |
-          while ! ssh -o StrictHostKeyChecking=no ubuntu@$VM_IP "echo 'Server is ready'"; do
+          while ! ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} "echo 'Server is ready'"; do
             echo "Waiting for SSH to become available..."
             sleep 5
           done
