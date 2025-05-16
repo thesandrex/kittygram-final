@@ -99,6 +99,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no ubuntu@$VM_IP << 'EOF'
           git clone https://github.com/thesandrex/kittygram-final.git ~/kittygram
           cd ~/kittygram
+          echo "${{ secrets.ENV }}" >> .env
           sudo apt update
           sudo apt install -y docker.io docker-compose
           sudo systemctl enable docker
