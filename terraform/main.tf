@@ -29,13 +29,23 @@ resource "yandex_vpc_network" "kittygram_network" {
   name = "kittygram-network"
 }
 
+resource "yandex_vpc_gateway" "egress-gateway" {
+  name = "egress-gateway"
+  shared_egress_gateway {}
+}
+
 resource "yandex_vpc_route_table" "internet_route_table" {
   name       = "internet-route-table"
   network_id = yandex_vpc_network.kittygram_network.id
 
   static_route {
+    destination_prefix = "10.2.0.0/16"
+    next_hop_address   = "172.16.10.10"
+  }
+
+  static_route {
     destination_prefix = "0.0.0.0/0"
-    next_hop_internet = true
+    gateway_id         = yandex_vpc_gateway.egress-gateway.id
   }
 }
 
