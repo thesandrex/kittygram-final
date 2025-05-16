@@ -67,8 +67,18 @@ jobs:
 
       - name: Deploy application
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-          cd ~/ktgrm-test
+          while ! ssh -o StrictHostKeyChecking=no ubuntu@$VM_IP "echo 'Server is ready'"; do
+            echo "Waiting for SSH to become available..."
+            sleep 5
+          done
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} << 'EOF'
+          git clone https://github.com/thesandrex/kittygram-final.git ~/kittygram
+          cd ~/kittygram
+          echo "${{ secrets.ENV }}" >> .env
+          sudo apt update
+          sudo apt install -y docker.io docker-compose
+          sudo systemctl enable docker
+          sudo systemctl start docker
           sudo docker-compose -f docker-compose.production.yml pull
           sudo docker-compose -f docker-compose.production.yml down
           sudo docker-compose -f docker-compose.production.yml up -d
