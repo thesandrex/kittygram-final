@@ -30,17 +30,16 @@ resource "yandex_vpc_network" "kittygram_network" {
 }
 
 resource "yandex_vpc_gateway" "internet_gateway" {
-  name      = "internet-gateway"
-  network_id = yandex_vpc_network.kittygram_network.id
+  name = "internet-gateway"
 }
 
-resource "yandex_vpc_route_table" "kittygram_route_table" {
-  name      = "kittygram-route-table"
+resource "yandex_vpc_route_table" "internet_route_table" {
   network_id = yandex_vpc_network.kittygram_network.id
+  name       = "internet-route-table"
 
   static_route {
     destination_prefix = "0.0.0.0/0"
-    gateway_id         = yandex_vpc_gateway.internet_gateway.id
+    next_hop_gateway_id = yandex_vpc_gateway.internet_gateway.default_gateway_id
   }
 }
 
@@ -49,8 +48,7 @@ resource "yandex_vpc_subnet" "kittygram_subnet" {
   network_id     = yandex_vpc_network.kittygram_network.id
   zone           = "ru-central1-a"
   v4_cidr_blocks = ["10.0.0.0/24"]
-
-  route_table_id = yandex_vpc_route_table.kittygram_route_table.id
+  route_table_id = yandex_vpc_route_table.internet_route_table.id
 }
 
 resource "yandex_vpc_security_group" "kittygram_sg" {
