@@ -76,8 +76,7 @@ resource "yandex_vpc_security_group" "kittygram_sg" {
   }
 
   egress {
-    protocol       = "TCP"
-    port           = 0
+    protocol       = "-1"
     description    = "Allow all outbound traffic"
     v4_cidr_blocks = ["0.0.0.0/0"]
   }
