@@ -48,8 +48,8 @@ resource "yandex_vpc_security_group" "kittygram_sg" {
   }
 
   ingress {
-    protocol        = "TCP"
-    port            = 9000
+    protocol        = "HTTP"
+    port            = 80
     description     = "Kittygram App Access"
     v4_cidr_blocks  = ["0.0.0.0/0"]
   }
